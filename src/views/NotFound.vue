@@ -1,11 +1,19 @@
 <template>
-  <iframe
-    src="https://cdn.sweetlove.top/404.html"
-    frameborder="0"
-    height="100%"
-    width="100%"
-  ></iframe>
+  <h1>404</h1>
+  <p>即将跳转到首页。。。</p>
 </template>
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+onMounted(() => {
+  setTimeout(() => {
+    router.push('/');
+  }, 2000);
+});
+</script>
 <style lang="stylus" scoped>
 iframe {
   overflow: hidden;

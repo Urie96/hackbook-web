@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hackbook-vue
+  labels:
+    app: hackbook-vue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hackbook-vue
+  template:
+    metadata:
+      labels:
+        app: hackbook-vue
+    spec:
+      containers:
+        - name: hackbook-vue
+          image: hub.lubui.com/hackbook-vue
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hackbook-vue
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: hackbook-vue
+  type: ClusterIP
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: hackbook-vue
+spec:
+  tls:
+    secretName: tls-lubui.com
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`book2.lubui.com`)
+      kind: Rule
+      services:
+        - name: hackbook-vue
+          port: 80

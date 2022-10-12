@@ -5,7 +5,6 @@ import NotFound from '@/views/NotFound.vue';
 import CourseList from '@/components/courseList/CourseList.vue';
 import Course from '@/components/course/Course.vue';
 import Article from '@/components/article/Article.vue';
-import Apply from '@/components/apply/Apply.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -34,7 +33,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'apply',
         name: 'apply',
-        component: Apply,
+        component: ()=>import('@/components/apply/Apply.vue'),
       }
     ],
   },

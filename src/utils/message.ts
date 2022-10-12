@@ -43,8 +43,8 @@ export const Message = (text: string, type = 'success', duration = 2000) => {
 };
 
 Message.success = (text: string, duration = 2000) =>
-  Message(text, duration, 'success');
+  Message(text, 'success', duration);
 Message.fail = (text: string, duration = 2000) =>
-  Message(text, duration, 'fail');
+  Message(text, 'fail', duration);
 Message.warning = (text: string, duration = 2000) =>
-  Message(text, duration, 'warning');
+  Message(text, 'warning', duration);

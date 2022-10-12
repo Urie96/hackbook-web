@@ -1,6 +1,8 @@
-import { Script } from '@/types/external.d.ts';
-
-export { Script };
+export enum Script {
+  Katex,
+  KatexAutoRender,
+  Highlight,
+}
 
 const scriptInfo = {
   [Script.Katex]: {
@@ -12,18 +14,13 @@ const scriptInfo = {
     url:
       'https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js',
     key: 'renderMathInElement',
+    style: [],
   },
   [Script.Highlight]: {
     url:
       'https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@10.4.1/highlight.min.js',
     key: 'hljs',
-  },
-  [Script.VideoJS]: {
-    url: 'https://cdn.jsdelivr.net/npm/video.js@7.10.2/dist/video.min.js',
-    key: 'videojs',
-    style: [
-      'https://cdn.jsdelivr.net/npm/video.js@7.10.2/dist/video-js.min.css',
-    ],
+    style: [],
   },
 };
 

@@ -20,7 +20,7 @@ export default defineConfig({
     exclude: ['@vant/touch-emulator'],
   },
   server: {
-    port: 80,
+    port: 5173,
     proxy: {
       '/graphql': {
         target: 'https://book.lubui.com',

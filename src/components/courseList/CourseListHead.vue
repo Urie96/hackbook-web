@@ -23,8 +23,8 @@ const emit = defineEmits<{
   (event: 'search', query: string): void;
 }>();
 
-const debounce = <T>(fn: (...args: any[]) => T, delay: number) => {
-  let timer: NodeJS.Timeout;
+const debounce = (fn: Function, delay: number) => {
+  let timer: any;
   return (...args: any[]) => {
     clearTimeout(timer);
     timer = setTimeout(() => fn(...args), delay);

@@ -1,0 +1,30 @@
+{
+  "name": "hackbook-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "pb": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./src/api ./abi.proto"
+  },
+  "dependencies": {
+    "@vant/touch-emulator": "^1.4.0",
+    "protobufjs": "^7.1.2",
+    "register-service-worker": "^1.7.2",
+    "vant": "^3.6.4",
+    "vue": "^3.2.37",
+    "vue-router": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "^18.8.3",
+    "@vitejs/plugin-vue": "^3.1.0",
+    "stylus": "^0.59.0",
+    "ts-proto": "^1.126.1",
+    "typescript": "^4.6.4",
+    "unplugin-vue-components": "^0.22.8",
+    "vite": "^3.1.0",
+    "vue-tsc": "^0.40.4"
+  }
+}

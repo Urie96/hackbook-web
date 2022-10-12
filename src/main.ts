@@ -13,6 +13,7 @@ import {
     Form,
     Field,
     CellGroup,
+    Sticky
 } from 'vant';
 import '@vant/touch-emulator';
 import App from '@/App.vue';
@@ -36,6 +37,7 @@ createApp(App)
     .use(Form)
     .use(Field)
     .use(CellGroup)
+    .use(Sticky)
     .use(Lazyload)
     .component('back-to-top', BackToTop)
     .component('tag', Tag)

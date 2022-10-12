@@ -20,14 +20,10 @@ export default defineConfig({
     exclude: ['@vant/touch-emulator'],
   },
   server: {
-    port: 5173,
+    port: 80,
     proxy: {
-      '/graphql': {
-        target: 'https://book.lubui.com',
-        secure: false,
-      },
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://localhost:8081',
         rewrite: (path) => path.replace(/^\/api/, ''),
         ws: true,
         cookieDomainRewrite: '.lubui.com',

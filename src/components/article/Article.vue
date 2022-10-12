@@ -1,5 +1,7 @@
 <template>
-  <NavBar :title="article?.title || ''" @goBack="goBack" />
+  <van-sticky>
+    <NavBar :title="article?.title || ''" @goBack="goBack" />
+  </van-sticky>
   <div class="main" v-if="article">
     <div class="title">
       {{ article.title }}
@@ -14,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onActivated, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import ArticleContent from './ArticleContent.vue';
 import ArticleCommentList from './ArticleCommentList.vue';
@@ -28,16 +30,13 @@ const props = defineProps<{
 const article = ref<Article | null>(null);
 
 const init = async () => {
-  if (props.id !== article.value?.id) {
-    article.value = await getArticleDetailById(props.id);
-  }
+  article.value = await getArticleDetailById(props.id);
+  document.scrollingElement?.scrollTo({ top: 0 });
 };
 
-watch(article, () => {
-  document.scrollingElement?.scrollTo({ top: 0 });
-});
+onMounted(init);
 
-onActivated(init);
+watch(() => props.id, init);
 
 const router = useRouter();
 

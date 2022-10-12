@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { onDeactivated, onMounted } from 'vue';
+import { onDeactivated, onMounted, watch } from 'vue';
 import {
   highlightIfNeed,
   renderMathIfNeed,
@@ -45,7 +45,7 @@ const removeInlineStyle = (el: HTMLElement) => {
   );
 };
 
-onMounted(() => {
+const init = () => {
   const contentEl = document.getElementById('article-content');
   if (!contentEl) return;
   // replcace 去除Math区域内的html标签，使katex能正确识别
@@ -59,7 +59,11 @@ onMounted(() => {
   highlightIfNeed(contentEl);
   renderMathIfNeed(contentEl);
   makeChildImagePreviewable(contentEl);
-});
+};
+
+onMounted(init);
+
+watch(() => props.article, init);
 
 onDeactivated(stopSavingStudyInfo);
 </script>

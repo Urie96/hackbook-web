@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import ArticleCommentListItem from './ArticleCommentListItem.vue';
 import { getArticleComments, Comment } from '@/api';
 
@@ -26,4 +26,11 @@ const comments = ref(new Array<Comment>());
 onMounted(async () => {
   comments.value = await getArticleComments(props.article_id);
 });
+
+watch(
+  () => props.article_id,
+  async () => {
+    comments.value = await getArticleComments(props.article_id);
+  }
+);
 </script>

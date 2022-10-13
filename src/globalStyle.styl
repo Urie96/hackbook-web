@@ -69,6 +69,11 @@ img {
   color: var(--text-color);
 }
 
+.van-dialog__content--isolated {
+  background-color: var(--background-color-sub);
+  color: var(--text-color);
+}
+
 .c-primary {
   color: var(--theme);
 }
@@ -127,4 +132,22 @@ img {
   display flex
   justify-content: center
   align-items: center
+}
+
+header {
+  .van-nav-bar {
+    background-color: var(--background-color);
+  }
+
+  .van-nav-bar__title {
+    color: var(--text-color);
+  }
+
+  .van-hairline--bottom::after {
+    border-bottom-color: var(--border-color);
+  }
+
+  .van-nav-bar__arrow.van-icon,.van-nav-bar__text{
+    color: var(--theme);  
+  }
 }

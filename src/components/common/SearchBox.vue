@@ -44,6 +44,7 @@ $MQMobileNarrow ?= 419px;
 .search-box {
   display: inline-block;
   position: relative;
+  z-index:50;
 
   input {
     cursor: text;

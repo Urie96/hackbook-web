@@ -34,18 +34,3 @@ onUnmounted(() => {
   document.title = preTitle;
 });
 </script>
-<style lang="stylus">
-header {
-  .van-nav-bar {
-    background-color: var(--background-color);
-  }
-
-  .van-nav-bar__title {
-    color: var(--text-color);
-  }
-
-  .van-hairline--bottom::after {
-    border-bottom-color: var(--border-color);
-  }
-}
-</style>

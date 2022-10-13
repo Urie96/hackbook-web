@@ -43,7 +43,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`book2.lubui.com`)
+    - match: Host(`book.lubui.com`) && !PathPrefix(`/api`)
       kind: Rule
       services:
         - name: hackbook-vue

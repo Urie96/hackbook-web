@@ -39,7 +39,6 @@ declare module '@vue/runtime-core' {
     VanCollapseItem: typeof import('vant/es')['CollapseItem']
     VanField: typeof import('vant/es')['Field']
     VanForm: typeof import('vant/es')['Form']
-    VanIcon: typeof import('vant/es')['Icon']
     VanImage: typeof import('vant/es')['Image']
     VanList: typeof import('vant/es')['List']
     VanNavBar: typeof import('vant/es')['NavBar']

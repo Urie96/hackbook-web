@@ -18,18 +18,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import ModePicker from '@/components/common/ModePicker.vue';
+import { debounce } from '@/utils';
 
 const emit = defineEmits<{
   (event: 'search', query: string): void;
 }>();
-
-const debounce = (fn: Function, delay: number) => {
-  let timer: any;
-  return (...args: any[]) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), delay);
-  };
-};
 
 const modelQuery = ref('');
 const placeholder = '';

@@ -1,5 +1,7 @@
 <template>
-  <NavBar :title="course?.title || ''" @goBack="goBack" />
+  <van-sticky>
+    <NavBar :title="course?.title || ''" @goBack="goBack" />
+  </van-sticky>
   <div class="course" v-if="course">
     <CourseHead :course="course" />
     <van-tabs
@@ -39,6 +41,7 @@ const course = ref<Course | null>(null);
 const init = async () => {
   // course.value = null;
   const _course = await getCourseById(props.id);
+  console.log(_course);
 
   if (_course?.id.startsWith('G')) {
     const getArticleOrder = (article: Article) =>

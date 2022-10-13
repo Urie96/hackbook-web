@@ -21,14 +21,17 @@
           <div style="padding-right: 30px">
             {{ article.title }}
           </div>
-          <i :class="getClass(article)"></i>
+          <div v-if="article.studyInfo" style="color: #699">
+            {{ article.studyInfo?.percent }}%
+          </div>
+          <i v-else :class="getClass(article)"></i>
         </div>
       </van-collapse-item>
     </van-collapse>
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { Article, Course } from '@/api';
 
@@ -55,18 +58,26 @@ const turnToArticlePage = (article: Article) => {
   }
 };
 
-const _course = props.course;
-const refreshStudyRecord = () => {
-  lastArticleId.value =
-    localStorage.getItem(`course_${_course?.id}_last_study_article_id`) || '';
-  lastSectionId.value =
-    localStorage.getItem(`course_${_course?.id}_last_study_section_id`) ||
-    _course?.sections[0]?.id ||
-    '';
+const refreshLastStudy = () => {
+  let lastSection = props.course.sections[0];
+  let lastArticle = lastSection?.articles[0];
+  for (const section of props.course.sections) {
+    for (const article of section.articles) {
+      if (
+        (article.studyInfo?.lastStudyAt || 0) >
+        (lastArticle?.studyInfo?.lastStudyAt || 0)
+      ) {
+        lastSection = section;
+        lastArticle = article;
+      }
+    }
+  }
+  lastSectionId.value = lastSection?.id;
+  lastArticleId.value = lastArticle?.id;
 };
 
-// refreshStudyRecord();
-// onActivated(refreshStudyRecord);
+onMounted(refreshLastStudy);
+watch(() => props.course, refreshLastStudy);
 </script>
 
 <style lang="stylus" scoped>

@@ -1,9 +1,14 @@
 
-import { Article, Course, CourseList, CommentList, UserInfo, UserRole } from './abi'
+import { Article, Course, CourseList, CommentList, UserInfo, UserRole, SaveStudyInfoRequest } from './abi'
 import { Message, Dialog, sleep } from '@/utils';
 export * from './abi'
 
-const fetchProto = async (url: string, options: RequestInit = {}) => {
+const fetchProto = async (url: string, options?: RequestInit) => {
+  if (options?.method?.toLowerCase() === 'post') {
+    options.headers = options.headers || {};
+    const headers: any = options.headers;
+    headers['content-type'] = 'application/protobuf';
+  }
   const resp = await fetch('/api' + url, options);
   if (resp.ok) {
     return new Uint8Array(await resp.arrayBuffer());
@@ -161,6 +166,12 @@ export const getArticleDetailById = async (articleId: string) => {
   return null
 }
 
+export const saveStudyInfo = async (info: SaveStudyInfoRequest) => {
+  await fetchProto('/study_info', {
+    method: 'POST',
+    body: SaveStudyInfoRequest.encode(info).finish(),
+  })
+}
 
 // export const addUserTend = async (courseTend: CourseTend) => {
 //   if (!window.isAuthenticated) await login();

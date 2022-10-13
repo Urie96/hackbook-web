@@ -1,11 +1,6 @@
 <template>
   <transition name="fade">
-    <div
-      v-show="visible"
-      :style="style"
-      class="back-to-ceiling"
-      @click="backToTop"
-    >
+    <div v-show="visible" class="back-to-ceiling" @click="backToTop">
       <svg
         t="1574745035067"
         class="icon"
@@ -27,8 +22,8 @@
   </transition>
 </template>
 
-<script>
-import { ref, onBeforeUnmount, toRefs, computed } from 'vue';
+<script setup>
+import { ref, onBeforeUnmount } from 'vue';
 
 function throttle(func, delay) {
   let timer = null;
@@ -50,37 +45,21 @@ function throttle(func, delay) {
   };
 }
 
-export default {
-  props: ['visibilityHeight', 'right', 'bottom'],
-  setup(props) {
-    const visible = ref(false);
-    const {
-      visibilityHeight = ref(400),
-      right = ref('1rem'),
-      bottom = ref('5rem'),
-    } = toRefs(props);
+const visible = ref(false);
+const visibilityHeight = ref(400);
 
-    const style = computed(() => ({
-      right: right.value,
-      bottom: bottom.value,
-    }));
+const handleScroll = throttle(() => {
+  visible.value = window.pageYOffset > visibilityHeight.value;
+}, 500);
 
-    const handleScroll = throttle(() => {
-      visible.value = window.pageYOffset > visibilityHeight.value;
-    }, 500);
+window.addEventListener('scroll', handleScroll);
 
-    window.addEventListener('scroll', handleScroll);
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 
-    onBeforeUnmount(() => {
-      window.removeEventListener('scroll', handleScroll);
-    });
-
-    const backToTop = () => {
-      window.scrollTo({ behavior: 'smooth', top: 0 });
-    };
-
-    return { visible, style, backToTop };
-  },
+const backToTop = () => {
+  window.scrollTo({ behavior: 'smooth', top: 0 });
 };
 </script>
 
@@ -96,6 +75,11 @@ export default {
   display: inline-block;
   text-align: center;
   cursor: pointer;
+
+  position: fixed;
+  bottom: 5rem;
+  right: 1rem;
+  z-index: 999;
 
   &::hover {
     background: #d5dbe7;

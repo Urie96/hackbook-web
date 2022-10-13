@@ -51,14 +51,6 @@ const goBack = () => {
     router.go(-1);
   }
 };
-
-// watchEffect(async () => {
-//   try {
-//     Loading.pop();
-//   } finally {
-//     Loading.clear();
-//   }
-// });
 </script>
 
 <style lang="stylus" scoped>

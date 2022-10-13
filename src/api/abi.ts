@@ -1,4 +1,5 @@
 /* eslint-disable */
+import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "abi";
@@ -49,6 +50,12 @@ export interface Course {
   title: string;
   sections: Section[];
   description: string;
+  studyInfo: StudyInfo | undefined;
+}
+
+export interface StudyInfo {
+  percent: number;
+  lastStudyAt: number;
 }
 
 export interface CourseList {
@@ -73,6 +80,7 @@ export interface Article {
   content: string;
   course: Course | undefined;
   section: Section | undefined;
+  studyInfo: StudyInfo | undefined;
 }
 
 export interface ArticleList {
@@ -95,6 +103,22 @@ export interface UserInfo {
   role: UserRole;
 }
 
+export interface SaveStudyInfoRequest {
+  articleId: string;
+  courseId: string;
+  percent: number;
+}
+
+export interface ArticleStudyInfo {
+  articleId: string;
+  percent: number;
+  lastStudyAt: number;
+}
+
+export interface GetArticleStudyInfoResponse {
+  articleStudyInfos: ArticleStudyInfo[];
+}
+
 function createBaseCourse(): Course {
   return {
     articleCount: 0,
@@ -109,6 +133,7 @@ function createBaseCourse(): Course {
     title: "",
     sections: [],
     description: "",
+    studyInfo: undefined,
   };
 }
 
@@ -149,6 +174,9 @@ export const Course = {
     }
     if (message.description !== "") {
       writer.uint32(98).string(message.description);
+    }
+    if (message.studyInfo !== undefined) {
+      StudyInfo.encode(message.studyInfo, writer.uint32(106).fork()).ldelim();
     }
     return writer;
   },
@@ -196,6 +224,9 @@ export const Course = {
         case 12:
           message.description = reader.string();
           break;
+        case 13:
+          message.studyInfo = StudyInfo.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -218,6 +249,7 @@ export const Course = {
       title: isSet(object.title) ? String(object.title) : "",
       sections: Array.isArray(object?.sections) ? object.sections.map((e: any) => Section.fromJSON(e)) : [],
       description: isSet(object.description) ? String(object.description) : "",
+      studyInfo: isSet(object.studyInfo) ? StudyInfo.fromJSON(object.studyInfo) : undefined,
     };
   },
 
@@ -239,6 +271,8 @@ export const Course = {
       obj.sections = [];
     }
     message.description !== undefined && (obj.description = message.description);
+    message.studyInfo !== undefined &&
+      (obj.studyInfo = message.studyInfo ? StudyInfo.toJSON(message.studyInfo) : undefined);
     return obj;
   },
 
@@ -256,6 +290,67 @@ export const Course = {
     message.title = object.title ?? "";
     message.sections = object.sections?.map((e) => Section.fromPartial(e)) || [];
     message.description = object.description ?? "";
+    message.studyInfo = (object.studyInfo !== undefined && object.studyInfo !== null)
+      ? StudyInfo.fromPartial(object.studyInfo)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseStudyInfo(): StudyInfo {
+  return { percent: 0, lastStudyAt: 0 };
+}
+
+export const StudyInfo = {
+  encode(message: StudyInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.percent !== 0) {
+      writer.uint32(8).uint32(message.percent);
+    }
+    if (message.lastStudyAt !== 0) {
+      writer.uint32(16).uint64(message.lastStudyAt);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): StudyInfo {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStudyInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.percent = reader.uint32();
+          break;
+        case 2:
+          message.lastStudyAt = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): StudyInfo {
+    return {
+      percent: isSet(object.percent) ? Number(object.percent) : 0,
+      lastStudyAt: isSet(object.lastStudyAt) ? Number(object.lastStudyAt) : 0,
+    };
+  },
+
+  toJSON(message: StudyInfo): unknown {
+    const obj: any = {};
+    message.percent !== undefined && (obj.percent = Math.round(message.percent));
+    message.lastStudyAt !== undefined && (obj.lastStudyAt = Math.round(message.lastStudyAt));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<StudyInfo>, I>>(object: I): StudyInfo {
+    const message = createBaseStudyInfo();
+    message.percent = object.percent ?? 0;
+    message.lastStudyAt = object.lastStudyAt ?? 0;
     return message;
   },
 };
@@ -434,7 +529,16 @@ export const SectionList = {
 };
 
 function createBaseArticle(): Article {
-  return { id: "", title: "", publishDate: "", done: false, content: "", course: undefined, section: undefined };
+  return {
+    id: "",
+    title: "",
+    publishDate: "",
+    done: false,
+    content: "",
+    course: undefined,
+    section: undefined,
+    studyInfo: undefined,
+  };
 }
 
 export const Article = {
@@ -459,6 +563,9 @@ export const Article = {
     }
     if (message.section !== undefined) {
       Section.encode(message.section, writer.uint32(58).fork()).ldelim();
+    }
+    if (message.studyInfo !== undefined) {
+      StudyInfo.encode(message.studyInfo, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -491,6 +598,9 @@ export const Article = {
         case 7:
           message.section = Section.decode(reader, reader.uint32());
           break;
+        case 8:
+          message.studyInfo = StudyInfo.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -508,6 +618,7 @@ export const Article = {
       content: isSet(object.content) ? String(object.content) : "",
       course: isSet(object.course) ? Course.fromJSON(object.course) : undefined,
       section: isSet(object.section) ? Section.fromJSON(object.section) : undefined,
+      studyInfo: isSet(object.studyInfo) ? StudyInfo.fromJSON(object.studyInfo) : undefined,
     };
   },
 
@@ -520,6 +631,8 @@ export const Article = {
     message.content !== undefined && (obj.content = message.content);
     message.course !== undefined && (obj.course = message.course ? Course.toJSON(message.course) : undefined);
     message.section !== undefined && (obj.section = message.section ? Section.toJSON(message.section) : undefined);
+    message.studyInfo !== undefined &&
+      (obj.studyInfo = message.studyInfo ? StudyInfo.toJSON(message.studyInfo) : undefined);
     return obj;
   },
 
@@ -535,6 +648,9 @@ export const Article = {
       : undefined;
     message.section = (object.section !== undefined && object.section !== null)
       ? Section.fromPartial(object.section)
+      : undefined;
+    message.studyInfo = (object.studyInfo !== undefined && object.studyInfo !== null)
+      ? StudyInfo.fromPartial(object.studyInfo)
       : undefined;
     return message;
   },
@@ -678,7 +794,7 @@ function createBaseCommentList(): CommentList {
 export const CommentList = {
   encode(message: CommentList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.comments) {
-      Comment.encode(v!, writer.uint32(34).fork()).ldelim();
+      Comment.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -690,7 +806,7 @@ export const CommentList = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 4:
+        case 1:
           message.comments.push(Comment.decode(reader, reader.uint32()));
           break;
         default:
@@ -780,6 +896,214 @@ export const UserInfo = {
   },
 };
 
+function createBaseSaveStudyInfoRequest(): SaveStudyInfoRequest {
+  return { articleId: "", courseId: "", percent: 0 };
+}
+
+export const SaveStudyInfoRequest = {
+  encode(message: SaveStudyInfoRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.articleId !== "") {
+      writer.uint32(10).string(message.articleId);
+    }
+    if (message.courseId !== "") {
+      writer.uint32(18).string(message.courseId);
+    }
+    if (message.percent !== 0) {
+      writer.uint32(24).uint32(message.percent);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SaveStudyInfoRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSaveStudyInfoRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.articleId = reader.string();
+          break;
+        case 2:
+          message.courseId = reader.string();
+          break;
+        case 3:
+          message.percent = reader.uint32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SaveStudyInfoRequest {
+    return {
+      articleId: isSet(object.articleId) ? String(object.articleId) : "",
+      courseId: isSet(object.courseId) ? String(object.courseId) : "",
+      percent: isSet(object.percent) ? Number(object.percent) : 0,
+    };
+  },
+
+  toJSON(message: SaveStudyInfoRequest): unknown {
+    const obj: any = {};
+    message.articleId !== undefined && (obj.articleId = message.articleId);
+    message.courseId !== undefined && (obj.courseId = message.courseId);
+    message.percent !== undefined && (obj.percent = Math.round(message.percent));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<SaveStudyInfoRequest>, I>>(object: I): SaveStudyInfoRequest {
+    const message = createBaseSaveStudyInfoRequest();
+    message.articleId = object.articleId ?? "";
+    message.courseId = object.courseId ?? "";
+    message.percent = object.percent ?? 0;
+    return message;
+  },
+};
+
+function createBaseArticleStudyInfo(): ArticleStudyInfo {
+  return { articleId: "", percent: 0, lastStudyAt: 0 };
+}
+
+export const ArticleStudyInfo = {
+  encode(message: ArticleStudyInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.articleId !== "") {
+      writer.uint32(10).string(message.articleId);
+    }
+    if (message.percent !== 0) {
+      writer.uint32(16).uint32(message.percent);
+    }
+    if (message.lastStudyAt !== 0) {
+      writer.uint32(24).uint64(message.lastStudyAt);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ArticleStudyInfo {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseArticleStudyInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.articleId = reader.string();
+          break;
+        case 2:
+          message.percent = reader.uint32();
+          break;
+        case 3:
+          message.lastStudyAt = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ArticleStudyInfo {
+    return {
+      articleId: isSet(object.articleId) ? String(object.articleId) : "",
+      percent: isSet(object.percent) ? Number(object.percent) : 0,
+      lastStudyAt: isSet(object.lastStudyAt) ? Number(object.lastStudyAt) : 0,
+    };
+  },
+
+  toJSON(message: ArticleStudyInfo): unknown {
+    const obj: any = {};
+    message.articleId !== undefined && (obj.articleId = message.articleId);
+    message.percent !== undefined && (obj.percent = Math.round(message.percent));
+    message.lastStudyAt !== undefined && (obj.lastStudyAt = Math.round(message.lastStudyAt));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ArticleStudyInfo>, I>>(object: I): ArticleStudyInfo {
+    const message = createBaseArticleStudyInfo();
+    message.articleId = object.articleId ?? "";
+    message.percent = object.percent ?? 0;
+    message.lastStudyAt = object.lastStudyAt ?? 0;
+    return message;
+  },
+};
+
+function createBaseGetArticleStudyInfoResponse(): GetArticleStudyInfoResponse {
+  return { articleStudyInfos: [] };
+}
+
+export const GetArticleStudyInfoResponse = {
+  encode(message: GetArticleStudyInfoResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.articleStudyInfos) {
+      ArticleStudyInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetArticleStudyInfoResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetArticleStudyInfoResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.articleStudyInfos.push(ArticleStudyInfo.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetArticleStudyInfoResponse {
+    return {
+      articleStudyInfos: Array.isArray(object?.articleStudyInfos)
+        ? object.articleStudyInfos.map((e: any) => ArticleStudyInfo.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: GetArticleStudyInfoResponse): unknown {
+    const obj: any = {};
+    if (message.articleStudyInfos) {
+      obj.articleStudyInfos = message.articleStudyInfos.map((e) => e ? ArticleStudyInfo.toJSON(e) : undefined);
+    } else {
+      obj.articleStudyInfos = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<GetArticleStudyInfoResponse>, I>>(object: I): GetArticleStudyInfoResponse {
+    const message = createBaseGetArticleStudyInfoResponse();
+    message.articleStudyInfos = object.articleStudyInfos?.map((e) => ArticleStudyInfo.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -790,6 +1114,20 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
+// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

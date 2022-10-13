@@ -1,41 +1,68 @@
 <template>
-  <article id="article-content"></article>
+  <article id="article-content" ref="content"></article>
 </template>
 
 <script setup lang="ts">
-import { onDeactivated, onMounted, watch } from 'vue';
+import { onDeactivated, onMounted, watch, ref } from 'vue';
 import {
   highlightIfNeed,
   renderMathIfNeed,
   makeChildImagePreviewable,
+  debounce,
 } from '@/utils/';
-import { Article } from '@/api';
+import { Article, saveStudyInfo } from '@/api';
 
 const props = defineProps<{
   article: Article;
 }>();
 
-let interval: NodeJS.Timeout;
-const storageKey = () => `article_${props.article.id}_log`;
+let content = ref<HTMLElement>();
+
+const handleScroll = debounce(() => {
+  if (!props.article || !props.article.course || !props.article.course.id) {
+    return;
+  }
+  const rect = content.value?.getBoundingClientRect();
+  if (!rect) {
+    return;
+  }
+  let percent = ((screen.availHeight - rect.top) * 100) / rect.height;
+  percent = percent | 0;
+  if (percent < 0) {
+    percent = 0;
+  }
+  if (percent > 100) {
+    percent = 100;
+  }
+  saveStudyInfo({
+    courseId: props.article.course.id,
+    articleId: props.article.id,
+    percent,
+  });
+}, 1000);
 
 const savingStudyRecord = () => {
-  const scrollingElement = document.scrollingElement;
-  if (scrollingElement) {
-    interval = setInterval(
-      () =>
-        localStorage.setItem(storageKey(), String(scrollingElement.scrollTop)),
-      10000
-    );
-  }
+  window.addEventListener('scroll', handleScroll);
 };
 
-const stopSavingStudyInfo = () => clearInterval(interval);
+const stopSavingStudyInfo = () => {
+  window.removeEventListener('scroll', handleScroll);
+};
 
 const turnToLastStudyPosition = () => {
-  const studyPosition = Number(localStorage.getItem(storageKey())) || 0;
+  const rect = content.value?.getBoundingClientRect();
+  if (!rect) {
+    return;
+  }
+  const studyPosition =
+    (rect.height * (props.article.studyInfo?.percent || 0)) / 100;
+
+  // const studyPosition = Number(localStorage.getItem(storageKey())) || 0;
   const scrollingElement = document.scrollingElement;
   if (scrollingElement) {
-    scrollingElement.scrollTo({ top: Number(studyPosition) });
+    scrollingElement.scrollTo({
+      top: Number(studyPosition) - screen.availHeight,
+    });
   }
 };
 
@@ -46,7 +73,7 @@ const removeInlineStyle = (el: HTMLElement) => {
 };
 
 const init = () => {
-  const contentEl = document.getElementById('article-content');
+  const contentEl = content.value;
   if (!contentEl) return;
   // replcace 去除Math区域内的html标签，使katex能正确识别
   contentEl.innerHTML =

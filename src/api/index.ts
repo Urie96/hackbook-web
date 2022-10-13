@@ -75,7 +75,6 @@ async function receiveMessage() {
         switch (data) {
           case "You have logged in elsewhere":
             popupLock();
-            localStorage.setItem('lock_util', String(Date.now() + 1000 * 60 * 10));
         }
       }
       resolve(e);
@@ -130,11 +129,6 @@ const connect = async () => {
     }
   })
   return true;
-}
-
-const lockUtil = localStorage.getItem('lock_util');
-if (lockUtil && Date.now() < Number(lockUtil)) {
-  popupLock();
 }
 
 function popupLock() {

@@ -1,7 +1,9 @@
 <template>
   <div>
-    <CourseListHead @search="onSearch" />
-    <div style="padding-top: 3.6rem">
+    <van-sticky>
+      <CourseListHead @search="onSearch" />
+    </van-sticky>
+    <div>
       <van-list
         v-model:loading="loading"
         :finished="finished"

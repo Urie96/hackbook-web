@@ -7,7 +7,7 @@
       @click-left="$emit('goBack')"
     >
       <template #right>
-        <ModePicker />
+        <SwitchAppearance style="margin-right: 10px" />
         <fullscreen-button />
       </template>
     </van-nav-bar>
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { onUnmounted } from 'vue';
-import ModePicker from './ModePicker.vue';
+import SwitchAppearance from './SwitchAppearance.vue';
 
 const props = defineProps<{
   title: string;

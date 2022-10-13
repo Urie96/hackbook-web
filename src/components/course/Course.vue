@@ -1,7 +1,5 @@
 <template>
-  <van-sticky>
-    <NavBar :title="course?.title || ''" @goBack="goBack" />
-  </van-sticky>
+  <NavBar :title="course?.title || ''" @goBack="goBack" />
   <div class="course" v-if="course">
     <CourseHead :course="course" />
     <van-tabs

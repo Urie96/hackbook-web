@@ -10,14 +10,14 @@
       <span class="site-name">HackBook</span>
     </div>
     <div class="right">
-      <ModePicker />
+      <SwitchAppearance style="margin-right: 10px" />
       <fullscreen-button style="height: 36px" />
     </div>
   </header>
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import ModePicker from '@/components/common/ModePicker.vue';
+import SwitchAppearance from '@/components/common/SwitchAppearance.vue';
 import { debounce } from '@/utils';
 
 const emit = defineEmits<{
@@ -39,21 +39,23 @@ watch(modelQuery, update);
 
 <style lang="stylus" scoped>
 header {
-  // display: flex;
-  // align-items: center;
-  // justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 0.7rem 1.5rem;
-  padding-left: 7rem;
   background: var(--background-color);
   z-index: 20;
   height: 3.6rem;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
   box-shadow: var(--box-shadow);
   line-height: 2.2rem;
   box-sizing: border-box;
+
+  .title{
+    margin-left: 1rem;
+    flex-shrink: 100;
+    max-height: 100%;
+    overflow:hidden;
+  }
 
   img {
     height: 2.2rem;
@@ -67,20 +69,18 @@ header {
     font-size: 1.2rem;
     font-weight: 500;
     color: var(--text-color);
-    position: relative;
   }
 
+
   .left {
+    width:50px
     z-index: 50;
-    padding-left: 1.5rem;
     box-sizing: border-box;
     white-space: nowrap;
     font-size: 0.9rem;
-    position: absolute;
-    left: 0;
-    top: 0.7rem;
     display: flex;
     background-color: var(--background-color);
+    flex-shrink: 1;
 
     .seach-box {
       flex: 0 0 auto;
@@ -91,10 +91,10 @@ header {
   }
 
   .right {
-    position: absolute;
-    right: 1rem;
-    top: 0.7rem;
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 1;
 
     svg {
       width: 2rem;

@@ -29,6 +29,8 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchBox: typeof import('./src/components/common/SearchBox.vue')['default']
+    Switch: typeof import('./src/components/common/Switch.vue')['default']
+    SwitchAppearance: typeof import('./src/components/common/SwitchAppearance.vue')['default']
     SWPopup: typeof import('./src/components/pwa/SWPopup.vue')['default']
     Tag: typeof import('./src/components/common/Tag.vue')['default']
     VanButton: typeof import('vant/es')['Button']
@@ -46,5 +48,6 @@ declare module '@vue/runtime-core' {
     VanSwipeCell: typeof import('vant/es')['SwipeCell']
     VanTab: typeof import('vant/es')['Tab']
     VanTabs: typeof import('vant/es')['Tabs']
+    VPSwitchAppearance: typeof import('./src/components/common/VPSwitchAppearance.vue')['default']
   }
 }

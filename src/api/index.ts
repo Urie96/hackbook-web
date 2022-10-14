@@ -40,6 +40,9 @@ export const getLoggedUser = async () => {
     return loggedUser;
   }
   const data = await fetchProto('/me')
+  if (!data.length) {
+    return null;
+  }
   loggedUser = UserInfo.decode(data);
   return loggedUser;
 }

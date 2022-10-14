@@ -4,7 +4,7 @@
   </span>
 </template>
 
-<script>
+<script setup>
 const getOneColor = (() => {
   const tagColorArr = [
     '#e15b64',
@@ -22,12 +22,6 @@ const getOneColor = (() => {
   ];
   return () => tagColorArr[Math.floor(Math.random() * tagColorArr.length)];
 })();
-
-export default {
-  setup() {
-    return { getOneColor };
-  },
-};
 </script>
 
 <style lang="stylus">

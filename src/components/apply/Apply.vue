@@ -62,7 +62,7 @@ onMounted(async () => {
       title: '已经拥有阅读权限啦',
       message: '你可以去主页找找喜欢的课程',
     });
-    router.push('/');
+    router.replace('/');
   }
 });
 
@@ -75,6 +75,6 @@ const onSubmit = async () => {
     title: '申请成功',
     message: '我们会尽快审核你的申请',
   });
-  router.push('/');
+  router.replace('/');
 };
 </script>

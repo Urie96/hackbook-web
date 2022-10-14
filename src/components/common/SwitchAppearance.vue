@@ -37,6 +37,8 @@ function useAppearance() {
   let isDark =
     userPreference === 'auto' ? query.matches : userPreference === 'dark';
 
+  setClass(isDark);
+
   query.onchange = (e) => {
     if (userPreference === 'auto') {
       setClass((isDark = e.matches));

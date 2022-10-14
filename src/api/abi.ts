@@ -58,8 +58,9 @@ export interface StudyInfo {
   lastStudyAt: number;
 }
 
-export interface CourseList {
+export interface ListCourseResponse {
   courses: Course[];
+  more: boolean;
 }
 
 export interface Section {
@@ -107,16 +108,6 @@ export interface SaveStudyInfoRequest {
   articleId: string;
   courseId: string;
   percent: number;
-}
-
-export interface ArticleStudyInfo {
-  articleId: string;
-  percent: number;
-  lastStudyAt: number;
-}
-
-export interface GetArticleStudyInfoResponse {
-  articleStudyInfos: ArticleStudyInfo[];
 }
 
 function createBaseCourse(): Course {
@@ -304,7 +295,7 @@ function createBaseStudyInfo(): StudyInfo {
 export const StudyInfo = {
   encode(message: StudyInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.percent !== 0) {
-      writer.uint32(8).uint32(message.percent);
+      writer.uint32(13).float(message.percent);
     }
     if (message.lastStudyAt !== 0) {
       writer.uint32(16).uint64(message.lastStudyAt);
@@ -320,7 +311,7 @@ export const StudyInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.percent = reader.uint32();
+          message.percent = reader.float();
           break;
         case 2:
           message.lastStudyAt = longToNumber(reader.uint64() as Long);
@@ -342,7 +333,7 @@ export const StudyInfo = {
 
   toJSON(message: StudyInfo): unknown {
     const obj: any = {};
-    message.percent !== undefined && (obj.percent = Math.round(message.percent));
+    message.percent !== undefined && (obj.percent = message.percent);
     message.lastStudyAt !== undefined && (obj.lastStudyAt = Math.round(message.lastStudyAt));
     return obj;
   },
@@ -355,27 +346,33 @@ export const StudyInfo = {
   },
 };
 
-function createBaseCourseList(): CourseList {
-  return { courses: [] };
+function createBaseListCourseResponse(): ListCourseResponse {
+  return { courses: [], more: false };
 }
 
-export const CourseList = {
-  encode(message: CourseList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ListCourseResponse = {
+  encode(message: ListCourseResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.courses) {
       Course.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.more === true) {
+      writer.uint32(16).bool(message.more);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CourseList {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListCourseResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCourseList();
+    const message = createBaseListCourseResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
           message.courses.push(Course.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.more = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);
@@ -385,23 +382,28 @@ export const CourseList = {
     return message;
   },
 
-  fromJSON(object: any): CourseList {
-    return { courses: Array.isArray(object?.courses) ? object.courses.map((e: any) => Course.fromJSON(e)) : [] };
+  fromJSON(object: any): ListCourseResponse {
+    return {
+      courses: Array.isArray(object?.courses) ? object.courses.map((e: any) => Course.fromJSON(e)) : [],
+      more: isSet(object.more) ? Boolean(object.more) : false,
+    };
   },
 
-  toJSON(message: CourseList): unknown {
+  toJSON(message: ListCourseResponse): unknown {
     const obj: any = {};
     if (message.courses) {
       obj.courses = message.courses.map((e) => e ? Course.toJSON(e) : undefined);
     } else {
       obj.courses = [];
     }
+    message.more !== undefined && (obj.more = message.more);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<CourseList>, I>>(object: I): CourseList {
-    const message = createBaseCourseList();
+  fromPartial<I extends Exact<DeepPartial<ListCourseResponse>, I>>(object: I): ListCourseResponse {
+    const message = createBaseListCourseResponse();
     message.courses = object.courses?.map((e) => Course.fromPartial(e)) || [];
+    message.more = object.more ?? false;
     return message;
   },
 };
@@ -909,7 +911,7 @@ export const SaveStudyInfoRequest = {
       writer.uint32(18).string(message.courseId);
     }
     if (message.percent !== 0) {
-      writer.uint32(24).uint32(message.percent);
+      writer.uint32(29).float(message.percent);
     }
     return writer;
   },
@@ -928,7 +930,7 @@ export const SaveStudyInfoRequest = {
           message.courseId = reader.string();
           break;
         case 3:
-          message.percent = reader.uint32();
+          message.percent = reader.float();
           break;
         default:
           reader.skipType(tag & 7);
@@ -950,7 +952,7 @@ export const SaveStudyInfoRequest = {
     const obj: any = {};
     message.articleId !== undefined && (obj.articleId = message.articleId);
     message.courseId !== undefined && (obj.courseId = message.courseId);
-    message.percent !== undefined && (obj.percent = Math.round(message.percent));
+    message.percent !== undefined && (obj.percent = message.percent);
     return obj;
   },
 
@@ -959,128 +961,6 @@ export const SaveStudyInfoRequest = {
     message.articleId = object.articleId ?? "";
     message.courseId = object.courseId ?? "";
     message.percent = object.percent ?? 0;
-    return message;
-  },
-};
-
-function createBaseArticleStudyInfo(): ArticleStudyInfo {
-  return { articleId: "", percent: 0, lastStudyAt: 0 };
-}
-
-export const ArticleStudyInfo = {
-  encode(message: ArticleStudyInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.articleId !== "") {
-      writer.uint32(10).string(message.articleId);
-    }
-    if (message.percent !== 0) {
-      writer.uint32(16).uint32(message.percent);
-    }
-    if (message.lastStudyAt !== 0) {
-      writer.uint32(24).uint64(message.lastStudyAt);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ArticleStudyInfo {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseArticleStudyInfo();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.articleId = reader.string();
-          break;
-        case 2:
-          message.percent = reader.uint32();
-          break;
-        case 3:
-          message.lastStudyAt = longToNumber(reader.uint64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ArticleStudyInfo {
-    return {
-      articleId: isSet(object.articleId) ? String(object.articleId) : "",
-      percent: isSet(object.percent) ? Number(object.percent) : 0,
-      lastStudyAt: isSet(object.lastStudyAt) ? Number(object.lastStudyAt) : 0,
-    };
-  },
-
-  toJSON(message: ArticleStudyInfo): unknown {
-    const obj: any = {};
-    message.articleId !== undefined && (obj.articleId = message.articleId);
-    message.percent !== undefined && (obj.percent = Math.round(message.percent));
-    message.lastStudyAt !== undefined && (obj.lastStudyAt = Math.round(message.lastStudyAt));
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ArticleStudyInfo>, I>>(object: I): ArticleStudyInfo {
-    const message = createBaseArticleStudyInfo();
-    message.articleId = object.articleId ?? "";
-    message.percent = object.percent ?? 0;
-    message.lastStudyAt = object.lastStudyAt ?? 0;
-    return message;
-  },
-};
-
-function createBaseGetArticleStudyInfoResponse(): GetArticleStudyInfoResponse {
-  return { articleStudyInfos: [] };
-}
-
-export const GetArticleStudyInfoResponse = {
-  encode(message: GetArticleStudyInfoResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.articleStudyInfos) {
-      ArticleStudyInfo.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetArticleStudyInfoResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetArticleStudyInfoResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.articleStudyInfos.push(ArticleStudyInfo.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GetArticleStudyInfoResponse {
-    return {
-      articleStudyInfos: Array.isArray(object?.articleStudyInfos)
-        ? object.articleStudyInfos.map((e: any) => ArticleStudyInfo.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: GetArticleStudyInfoResponse): unknown {
-    const obj: any = {};
-    if (message.articleStudyInfos) {
-      obj.articleStudyInfos = message.articleStudyInfos.map((e) => e ? ArticleStudyInfo.toJSON(e) : undefined);
-    } else {
-      obj.articleStudyInfos = [];
-    }
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<GetArticleStudyInfoResponse>, I>>(object: I): GetArticleStudyInfoResponse {
-    const message = createBaseGetArticleStudyInfoResponse();
-    message.articleStudyInfos = object.articleStudyInfos?.map((e) => ArticleStudyInfo.fromPartial(e)) || [];
     return message;
   },
 };

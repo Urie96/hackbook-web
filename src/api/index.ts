@@ -1,5 +1,5 @@
 
-import { Article, Course, CourseList, CommentList, UserInfo, UserRole, SaveStudyInfoRequest } from './abi'
+import { Article, Course, ListCourseResponse, CommentList, UserInfo, UserRole, SaveStudyInfoRequest } from './abi'
 import { Message, Dialog, sleep } from '@/utils';
 export * from './abi'
 
@@ -13,46 +13,35 @@ const fetchProto = async (url: string, options?: RequestInit) => {
   if (resp.ok) {
     return new Uint8Array(await resp.arrayBuffer());
   }
-  return null;
+  return new Uint8Array();
 }
 
 export const listCourses = async ({ offset = 0, limit = 20, keyword = '' }) => {
   const data = await fetchProto(`/courses?offset=${offset}&limit=${limit}&keyword=${keyword}`);
-  const res = {
-    courses: data ? CourseList.decode(data).courses : [],
-    more: true,
-  };
-  if (res.courses.length < limit) {
-    res.more = false;
-  }
-  return res
+  return ListCourseResponse.decode(data);
 };
 
 
 export const getCourseById = async (courseId: string) => {
   const data = await fetchProto(`/course/${courseId}`);
-  return data ? Course.decode(data) : null;
+  return Course.decode(data);
 }
 
 
 export const getArticleComments = async (articleId: string) => {
   const data = await fetchProto(`/article/${articleId}/comments`);
-  return data ? CommentList.decode(data).comments : [];
+  return CommentList.decode(data).comments;
 }
 
 let loggedUser: UserInfo | null = null;
 
 export const getLoggedUser = async () => {
   if (loggedUser) {
-    return loggedUser
+    return loggedUser;
   }
   const data = await fetchProto('/me')
-  if (data) {
-    loggedUser = UserInfo.decode(data);
-    return loggedUser
-  }
-  console.log('Not logged in');
-  return null
+  loggedUser = UserInfo.decode(data);
+  return loggedUser;
 }
 
 export const login = async (redirect = '') => {
@@ -89,6 +78,7 @@ const connect = async () => {
   if (!await getLoggedUser()) {
     await login();
   }
+  console.log(loggedUser);
   if (loggedUser!.role != UserRole.Reader) {
     try {
       await Dialog.confirm({

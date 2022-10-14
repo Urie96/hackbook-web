@@ -34,7 +34,6 @@ const onLoad = async () => {
   const { courses: partCourses, more } = await listCourses({
     offset: courses.value.length,
     keyword,
-    limit: 5,
   });
   courses.value.push(...partCourses);
   loading.value = false;

@@ -37,9 +37,7 @@ const props = defineProps<{
 const course = ref<Course | null>(null);
 
 const init = async () => {
-  // course.value = null;
   const _course = await getCourseById(props.id);
-  console.log(_course);
 
   if (_course?.id.startsWith('G')) {
     const getArticleOrder = (article: Article) =>
@@ -71,7 +69,10 @@ onMounted(init);
 
 const router = useRouter();
 
-const goBack = () => router.replace('/');
+const goBack = () => {
+  const backURL = '/';
+  history.state.back === backURL ? router.go(-1) : router.replace('/');
+};
 
 watch(() => props.id, init);
 </script>

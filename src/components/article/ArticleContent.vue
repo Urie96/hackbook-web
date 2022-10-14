@@ -3,12 +3,14 @@
 </template>
 
 <script setup lang="ts">
-import { onDeactivated, onMounted, watch, ref } from 'vue';
+import { onDeactivated, onMounted, watch, ref, onUnmounted } from 'vue';
 import {
   highlightIfNeed,
   renderMathIfNeed,
   makeChildImagePreviewable,
   debounce,
+  Toast,
+  Loading,
 } from '@/utils/';
 import { Article, saveStudyInfo } from '@/api';
 
@@ -22,12 +24,12 @@ const handleScroll = debounce(() => {
   if (!props.article || !props.article.course || !props.article.course.id) {
     return;
   }
-  const rect = content.value?.getBoundingClientRect();
-  if (!rect) {
+  const height = content.value?.getBoundingClientRect()?.height;
+  const top = document.scrollingElement?.scrollTop || 0;
+  if (!height) {
     return;
   }
-  let percent = ((screen.availHeight - rect.top) * 100) / rect.height;
-  percent = percent | 0;
+  let percent = (top * 100) / height;
   if (percent < 0) {
     percent = 0;
   }
@@ -50,19 +52,15 @@ const stopSavingStudyInfo = () => {
 };
 
 const turnToLastStudyPosition = () => {
-  const rect = content.value?.getBoundingClientRect();
-  if (!rect) {
+  const height = content.value?.getBoundingClientRect()?.height;
+  if (!height) {
     return;
   }
-  const studyPosition =
-    (rect.height * (props.article.studyInfo?.percent || 0)) / 100;
+  const top = (height * (props.article.studyInfo?.percent || 0)) / 100;
 
-  // const studyPosition = Number(localStorage.getItem(storageKey())) || 0;
-  const scrollingElement = document.scrollingElement;
-  if (scrollingElement) {
-    scrollingElement.scrollTo({
-      top: Number(studyPosition) - screen.availHeight,
-    });
+  document.scrollingElement?.scrollTo({ top });
+  if (top > 0) {
+    Toast({ message: '已为您定位到上次学习位置', position: 'bottom' });
   }
 };
 
@@ -81,17 +79,20 @@ const init = () => {
       match.replace(/<[^>]+>/g, '')
     ) || '';
   removeInlineStyle(contentEl);
-  turnToLastStudyPosition();
   savingStudyRecord();
   highlightIfNeed(contentEl);
   renderMathIfNeed(contentEl);
   makeChildImagePreviewable(contentEl);
+  setTimeout(() => {
+    turnToLastStudyPosition();
+  }, 100);
 };
 
 onMounted(init);
 
 watch(() => props.article, init);
 
+onUnmounted(stopSavingStudyInfo);
 onDeactivated(stopSavingStudyInfo);
 </script>
 

@@ -13,7 +13,7 @@ import {
     Form,
     Field,
     CellGroup,
-    Sticky
+    Sticky,
 } from 'vant';
 import '@vant/touch-emulator';
 import App from '@/App.vue';

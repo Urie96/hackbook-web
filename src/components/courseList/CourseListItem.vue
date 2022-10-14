@@ -70,10 +70,8 @@ const props = defineProps<{
 const router = useRouter();
 
 const routeToThisCourse = () => {
-  router.push({
-    name: 'course',
-    params: { id: props.course.id },
-  });
+  const nextPath = `/course/${props.course.id}`;
+  router.push(nextPath);
 };
 
 const isLastStudy = computed(() => props.course.id === lastStudyCourseId.value);

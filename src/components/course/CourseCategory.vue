@@ -20,11 +20,11 @@
         >
           <div style="padding-right: 30px">
             {{ article.title }}
+            <span v-if="article.studyInfo" style="color: var(--theme)">
+              已学{{ article.studyInfo?.percent | 0 }}%
+            </span>
           </div>
-          <div v-if="article.studyInfo" style="color: #699">
-            {{ article.studyInfo?.percent }}%
-          </div>
-          <i v-else :class="getClass(article)"></i>
+          <i :class="getClass(article)"></i>
         </div>
       </van-collapse-item>
     </van-collapse>
@@ -51,10 +51,11 @@ const getClass = (article: Article) => {
 
 const turnToArticlePage = (article: Article) => {
   if (article.done) {
-    router.push({
-      name: 'article',
-      params: { id: article.id },
-    });
+    lastArticleId.value = article.id;
+    const nextPath = `/article/${article.id}`;
+    history.state.forward === nextPath
+      ? history.forward()
+      : router.push(nextPath);
   }
 };
 

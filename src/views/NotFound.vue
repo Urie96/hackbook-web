@@ -10,7 +10,7 @@ const router = useRouter();
 
 onMounted(() => {
   setTimeout(() => {
-    router.push('/');
+    router.replace('/');
   }, 2000);
 });
 </script>

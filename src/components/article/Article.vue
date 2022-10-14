@@ -31,7 +31,6 @@ const article = ref<Article | null>(null);
 
 const init = async () => {
   article.value = await getArticleDetailById(props.id);
-  document.scrollingElement?.scrollTo({ top: 0 });
 };
 
 onMounted(init);
@@ -41,14 +40,12 @@ watch(() => props.id, init);
 const router = useRouter();
 
 const goBack = () => {
-  const course = article.value?.course;
-  if (course?.id) {
-    router.replace({
-      name: 'course',
-      params: { id: course.id },
-    });
-  } else {
+  const id = article.value?.course?.id;
+  if (!id) {
     router.go(-1);
+  } else {
+    const backURL = `/course/${id}`;
+    history.state.back === backURL ? router.go(-1) : router.replace('/');
   }
 };
 </script>

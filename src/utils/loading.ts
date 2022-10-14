@@ -4,8 +4,9 @@ export const Loading = {
   pop() {
     Toast.loading({
       message: '加载中...',
-      forbidClick: false,
+      forbidClick: true,
       duration: 0,
+      overlay: true,
       // overlay: true,
       icon: 'a iconfont icon-Loading spin',
     });

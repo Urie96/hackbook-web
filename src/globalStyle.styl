@@ -37,7 +37,7 @@ $theme=#3eaf7c;
   --mask-color: #888;
   --box-shadow: 0 1px 8px 0 rgba(0, 0,  0, 0.2);
   --background-color: $background
-  --background-color-sub: darken($background,5%)
+  --background-color-sub: darken($background,10%)
   --img-filter: brightness(1)
 }
 
@@ -69,7 +69,7 @@ img {
   color: var(--text-color);
 }
 
-.van-dialog__content--isolated {
+.van-dialog__content--isolated,.van-popup.van-toast {
   background-color: var(--background-color-sub);
   color: var(--text-color);
 }

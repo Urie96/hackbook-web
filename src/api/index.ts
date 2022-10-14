@@ -56,6 +56,10 @@ export const login = async (redirect = '') => {
 
 let socket: WebSocket | null = null;
 
+function socketAvailable() {
+  return socket && socket.readyState === WebSocket.OPEN;
+}
+
 async function receiveMessage() {
   return new Promise<MessageEvent<any>>((resolve, reject) => {
     socket!.onmessage = function (e) {
@@ -72,13 +76,12 @@ async function receiveMessage() {
 }
 
 const connect = async () => {
-  if (socket) {
+  if (socketAvailable()) {
     return true;
   }
   if (!await getLoggedUser()) {
     await login();
   }
-  console.log(loggedUser);
   if (loggedUser!.role != UserRole.Reader) {
     try {
       await Dialog.confirm({
@@ -125,16 +128,8 @@ function popupLock() {
   Dialog({ message: '检测到您的账户在其它地方登录，\n当前连接已被强制中断', showConfirmButton: false });
 }
 
-function disconnect() {
-  if (socket) {
-    console.log('Disconnecting...')
-    socket.close()
-    socket = null
-  }
-}
-
 export const getArticleDetailById = async (articleId: string) => {
-  if (!socket) {
+  if (!socketAvailable()) {
     const connected = await connect();
     if (!connected) {
       return null

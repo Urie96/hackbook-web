@@ -16,6 +16,14 @@ const fetchProto = async (url: string, options?: RequestInit) => {
   return new Uint8Array();
 }
 
+const toTimeStamp = (d: Date) => (d.valueOf() / 1000) | 0
+
+export const getConnectionSeconds = async (startAtGt: Date = new Date(0), startAtLt = new Date()) => {
+  const resp = await fetch('/api/connect_seconds?start_at_gt=' + toTimeStamp(startAtGt) + '&start_at_lt=' + toTimeStamp(startAtLt))
+  const res = await resp.json()
+  return Number(res) || 0;
+}
+
 export const listCourses = async ({ offset = 0, limit = 20, keyword = '' }) => {
   const data = await fetchProto(`/courses?offset=${offset}&limit=${limit}&keyword=${keyword}`);
   return ListCourseResponse.decode(data);

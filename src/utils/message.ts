@@ -1,7 +1,8 @@
 import 'vant/es/dialog/style';
 import 'vant/es/toast/style';
+import 'vant/es/notify/style';
 import './message.styl';
-export { Dialog, Toast } from 'vant';
+export { Dialog, Toast, Notify } from 'vant';
 
 const close = (messageElement: HTMLElement) => {
   messageElement.className = messageElement.className.replace('move-in', '');

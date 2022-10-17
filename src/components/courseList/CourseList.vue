@@ -20,9 +20,10 @@
 </template>
 
 <script setup lang="ts">
-import { onActivated, ref } from 'vue';
-import { Course, listCourses } from '@/api';
+import { onActivated, ref, onMounted } from 'vue';
+import { Course, listCourses, getConnectionSeconds } from '@/api';
 import { lastStudyCourseId } from './store';
+import { Notify, toDurationChinese, getFirstDayOfThisWeek } from '@/utils';
 
 const courses = ref(new Array<Course>());
 const loading = ref(false);
@@ -45,6 +46,22 @@ const refreshLastStudyCourse = () => {
 };
 
 onActivated(refreshLastStudyCourse);
+
+onMounted(async () => {
+  const [todaySecs, thisWeekSecs, allSecs] = await Promise.all([
+    getConnectionSeconds(new Date(new Date().toLocaleDateString())),
+    getConnectionSeconds(getFirstDayOfThisWeek()),
+    getConnectionSeconds(),
+  ]);
+  Notify({
+    type: 'success',
+    message: `今天学习了${toDurationChinese(
+      todaySecs
+    )}，本周学习了${toDurationChinese(
+      thisWeekSecs
+    )}，历史总共学习了${toDurationChinese(todaySecs)}`,
+  });
+});
 
 const onSearch = (query: string) => {
   keyword = query;

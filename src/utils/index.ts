@@ -41,3 +41,29 @@ export function debounce<F extends (...args: Parameters<F>) => ReturnType<F>>(
         timeout = setTimeout(() => func(...args), waitFor);
     };
 }
+
+export const toDurationChinese = (seconds: number) => {
+    if (seconds < 60) {
+        return '不到1分钟';
+    }
+    if (seconds < 3600) {
+        return `${Math.floor(seconds / 60)}分钟`;
+    }
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds - hours * 3600) / 60);
+    if (minutes > 0) {
+        return `${hours}小时${minutes}分钟`;
+    }
+    return `${hours}小时`;
+}
+
+export function getFirstDayOfThisWeek() {
+    const date = new Date();
+    const day = date.getDay() || 7;
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1 - day);
+};
+
+export function getFirstDayOfThisMonth() {
+    const date = new Date();
+    return new Date(date.getFullYear(), date.getMonth(), 1);
+}

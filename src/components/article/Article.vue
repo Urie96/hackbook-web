@@ -1,7 +1,5 @@
 <template>
-  <van-sticky>
-    <NavBar :title="article?.title || ''" @goBack="goBack" />
-  </van-sticky>
+  <NavBar sticky :title="article?.title || ''" @goBack="goBack" />
   <div class="main" v-if="article">
     <div class="title">
       {{ article.title }}

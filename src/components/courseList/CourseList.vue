@@ -1,8 +1,6 @@
 <template>
   <div>
-    <van-sticky>
-      <CourseListHead @search="onSearch" />
-    </van-sticky>
+    <CourseListHead @search="onSearch" />
     <div>
       <van-list
         v-model:loading="loading"
@@ -59,7 +57,7 @@ onMounted(async () => {
       todaySecs
     )}，本周学习了${toDurationChinese(
       thisWeekSecs
-    )}，历史总共学习了${toDurationChinese(todaySecs)}`,
+    )}，历史总共学习了${toDurationChinese(allSecs)}`,
   });
 });
 

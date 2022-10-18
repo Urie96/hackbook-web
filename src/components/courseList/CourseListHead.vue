@@ -1,26 +1,20 @@
 <template>
-  <header>
-    <van-nav-bar>
-      <template #left>
-        <search-box v-model="modelQuery" :placeholder="placeholder" />
-      </template>
-      <template #title>
-        <div class="search-box">
-          <img src="/favicon.svg" alt="" />
-          <span class="site-name">HackBook</span>
-        </div>
-      </template>
-      <template #right>
-        <SwitchAppearance style="margin-right: 10px" />
-        <fullscreen-button />
-      </template>
-    </van-nav-bar>
-  </header>
+  <NavBar sticky>
+    <template #left>
+      <search-box v-model="modelQuery" :placeholder="placeholder" />
+    </template>
+    <template #title>
+      <div class="search-box">
+        <img src="/favicon.svg" alt="" />
+        <span class="site-name">HackBook</span>
+      </div>
+    </template>
+  </NavBar>
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import SwitchAppearance from '@/components/common/SwitchAppearance.vue';
 import { debounce } from '@/utils';
+import NavBar from '@/components/common/NavBar.vue';
 
 const emit = defineEmits<{
   (event: 'search', query: string): void;

@@ -23,8 +23,6 @@ declare module '@vue/runtime-core' {
     CourseListItem: typeof import('./src/components/courseList/CourseListItem.vue')['default']
     Divider: typeof import('./src/components/common/Divider.vue')['default']
     FullScreenButton: typeof import('./src/components/common/FullScreenButton.vue')['default']
-    Mode: typeof import('./src/components/common/Mode/index.vue')['default']
-    ModePicker: typeof import('./src/components/common/ModePicker.vue')['default']
     NavBar: typeof import('./src/components/common/NavBar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -44,10 +42,8 @@ declare module '@vue/runtime-core' {
     VanImage: typeof import('vant/es')['Image']
     VanList: typeof import('vant/es')['List']
     VanNavBar: typeof import('vant/es')['NavBar']
-    VanSticky: typeof import('vant/es')['Sticky']
     VanSwipeCell: typeof import('vant/es')['SwipeCell']
     VanTab: typeof import('vant/es')['Tab']
     VanTabs: typeof import('vant/es')['Tabs']
-    VPSwitchAppearance: typeof import('./src/components/common/VPSwitchAppearance.vue')['default']
   }
 }

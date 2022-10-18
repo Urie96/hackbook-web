@@ -4,7 +4,7 @@
   </span>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const getOneColor = (() => {
   const tagColorArr = [
     '#e15b64',

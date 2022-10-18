@@ -8,14 +8,14 @@
       :placeholder="placeholder"
       autocomplete="off"
       spellcheck="false"
-      @input="$emit('update:modelValue', $event.target.value)"
+      @input="$emit('update:modelValue', ($event.target as any).value)"
       @focus="focused = true"
       @blur="focused = false"
     />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ref } from 'vue';
 
 export default {

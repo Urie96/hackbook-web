@@ -21,13 +21,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, onActivated } from 'vue';
 import CourseIntroduce from './CourseIntroduce.vue';
 import CourseCategory from './CourseCategory.vue';
 import CourseHead from './CourseHead.vue';
 import NavBar from '@/components/common/NavBar.vue';
 import { getCourseById, Course, Section, Article } from '@/api';
+import { useRouter } from '@/utils';
 
 const props = defineProps<{
   id: string;
@@ -66,14 +66,13 @@ const init = async () => {
 
 onMounted(init);
 
+onActivated(init);
+
 const router = useRouter();
 
 const goBack = () => {
-  const backURL = '/';
-  history.state.back === backURL ? router.go(-1) : router.replace('/');
+  router.back('/');
 };
-
-watch(() => props.id, init);
 </script>
 <style lang="stylus">
 .course {

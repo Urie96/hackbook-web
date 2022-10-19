@@ -18,9 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import { onActivated, ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Course, listCourses, getConnectionSeconds } from '@/api';
-import { lastStudyCourseId } from './store';
 import { Notify, toDurationChinese, getFirstDayOfThisWeek } from '@/utils';
 
 const courses = ref(new Array<Course>());
@@ -38,12 +37,6 @@ const onLoad = async () => {
   loading.value = false;
   finished.value = !more;
 };
-
-const refreshLastStudyCourse = () => {
-  lastStudyCourseId.value = localStorage.getItem('last_study_course_id') || '';
-};
-
-onActivated(refreshLastStudyCourse);
 
 onMounted(async () => {
   const [todaySecs, thisWeekSecs, allSecs] = await Promise.all([

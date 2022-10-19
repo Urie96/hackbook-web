@@ -15,11 +15,11 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import ArticleContent from './ArticleContent.vue';
 import ArticleCommentList from './ArticleCommentList.vue';
 import NavBar from '@/components/common/NavBar.vue';
 import { Article, getArticleDetailById } from '@/api';
+import { useRouter } from '@/utils';
 
 const props = defineProps<{
   id: string;
@@ -39,12 +39,7 @@ const router = useRouter();
 
 const goBack = () => {
   const id = article.value?.course?.id;
-  if (!id) {
-    router.go(-1);
-  } else {
-    const backURL = `/course/${id}`;
-    history.state.back === backURL ? router.go(-1) : router.replace('/');
-  }
+  router.back(id ? `/course/${id}` : '/');
 };
 </script>
 

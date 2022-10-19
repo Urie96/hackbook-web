@@ -37,9 +37,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import { getLoggedUser, login, UserRole, UserInfo } from '@/api';
-import { Dialog } from '@/utils';
+import { Dialog, useRouter } from '@/utils';
 
 const router = useRouter();
 
@@ -62,7 +61,7 @@ onMounted(async () => {
       title: '已经拥有阅读权限啦',
       message: '你可以去主页找找喜欢的课程',
     });
-    router.replace('/');
+    router.back('/');
   }
 });
 
@@ -75,6 +74,6 @@ const onSubmit = async () => {
     title: '申请成功',
     message: '我们会尽快审核你的申请',
   });
-  router.replace('/');
+  router.back('/');
 };
 </script>

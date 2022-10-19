@@ -26,7 +26,7 @@
             <span class="buy-count">{{ course.purchasedCount }}人购买</span>
             <span class="study">
               <i class="iconfont icon-Loading spin" v-if="!course.done"></i>
-              {{ isLastStudy ? '继续学习' : '学习' }}
+              学习
               <i class="iconfont icon-arrow-right"></i>
             </span>
           </div>
@@ -58,10 +58,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useRouter } from 'vue-router';
 import Card from '@/components/common/Card.vue';
-import { lastStudyCourseId } from './store';
 import { Course } from '@/api';
+import { useRouter } from '@/utils';
 
 const props = defineProps<{
   course: Course;
@@ -70,11 +69,9 @@ const props = defineProps<{
 const router = useRouter();
 
 const routeToThisCourse = () => {
-  const nextPath = `/course/${props.course.id}`;
-  router.push(nextPath);
+  router.push(`/course/${props.course.id}`);
 };
 
-const isLastStudy = computed(() => props.course.id === lastStudyCourseId.value);
 const isFavorite = computed(() => false);
 const isDislike = computed(() => false);
 const buttonIsDisable = computed(() => isFavorite.value || isDislike.value);

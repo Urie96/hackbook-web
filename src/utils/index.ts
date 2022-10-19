@@ -1,3 +1,4 @@
+import { useRouter as useVueRouter } from 'vue-router';
 export * from './message';
 export * from './loading';
 export * from './importExternal';
@@ -66,4 +67,16 @@ export function getFirstDayOfThisWeek() {
 export function getFirstDayOfThisMonth() {
     const date = new Date();
     return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+export const useRouter = () => {
+    const router = useVueRouter();
+    return {
+        push: (path: string) => {
+            history.state.forward === path ? history.forward() : router.push(path);
+        },
+        back: (path: string) => {
+            history.state.back === path ? history.back() : router.replace(path);
+        }
+    }
 }

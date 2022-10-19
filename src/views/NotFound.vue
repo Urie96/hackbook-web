@@ -4,13 +4,13 @@
 </template>
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter } from '@/utils';
 
 const router = useRouter();
 
 onMounted(() => {
   setTimeout(() => {
-    router.replace('/');
+    router.back('/');
   }, 2000);
 });
 </script>

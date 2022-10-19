@@ -32,8 +32,8 @@
 </template>
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import { Article, Course } from '@/api';
+import { useRouter } from '@/utils';
 
 const props = defineProps<{
   course: Course;
@@ -52,10 +52,7 @@ const getClass = (article: Article) => {
 const turnToArticlePage = (article: Article) => {
   if (article.done) {
     lastArticleId.value = article.id;
-    const nextPath = `/article/${article.id}`;
-    history.state.forward === nextPath
-      ? history.forward()
-      : router.push(nextPath);
+    router.push(`/article/${article.id}`);
   }
 };
 
